@@ -1,4 +1,4 @@
-package org.txstate.edu;
+package org.txstate.edu.config;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
