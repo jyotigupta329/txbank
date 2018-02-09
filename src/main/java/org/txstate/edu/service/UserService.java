@@ -12,6 +12,7 @@ import org.txstate.edu.model.Users;
 import org.txstate.edu.repository.UserRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +24,15 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    public List<Users> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    /**
+     *  Spring Security related methods
+     *  Below methods are ment to be used by spring internally
+     *
+     **/
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Users user = userRepository.findByUsername(username);
