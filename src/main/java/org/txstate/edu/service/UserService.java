@@ -24,14 +24,33 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    public Users getByUserName(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
 
+    public void addUser(Users user) {
+        userRepository.save(user);
+    }
+
+
+    public void updateUser(Users user, String username) {
+        Users userobj = userRepository.findByUsername(username);
+        userobj.setPassword(user.getPassword());
+        userRepository.save(user);
+    }
+
+
+    public void deleteUser(String username) {
+        userRepository.delete(username);
+    }
+
     /**
-     *  Spring Security related methods
-     *  Below methods are ment to be used by spring internally
-     *
+     * Spring Security related methods
+     * Below methods are meant to be used by spring internally
      **/
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -49,4 +68,5 @@ public class UserService implements UserDetailsService {
                 .map(role -> new SimpleGrantedAuthority(role.getRole()))
                 .collect(Collectors.toList());
     }
+
 }
