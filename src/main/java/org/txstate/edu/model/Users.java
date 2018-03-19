@@ -9,7 +9,7 @@ import java.util.Collection;
 public class Users extends BaseModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;

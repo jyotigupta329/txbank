@@ -16,11 +16,4 @@ public class AAController {
     @Autowired
     private AAService aaService;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/authenticate")
-    @ResponseBody
-    public boolean authenticate(@RequestBody LoginModel loginModel ) {
-        boolean isAuthenticated = aaService.authenticate(loginModel.getUsername(), loginModel.getPassword());
-        return  isAuthenticated;
-    }
-
 }

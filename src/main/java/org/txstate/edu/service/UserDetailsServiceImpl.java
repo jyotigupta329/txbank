@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * Created by jyoti on 2/8/18.
  */
 @Service
-public class UserService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
