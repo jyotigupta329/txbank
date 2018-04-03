@@ -13,6 +13,9 @@ public class Users extends BaseModel {
     private Long id;
     private String username;
     private String password;
+    private boolean enable;
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
@@ -53,5 +56,29 @@ public class Users extends BaseModel {
 
     public void setRoles(Collection<Roles> roles) {
         this.roles = roles;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 }
