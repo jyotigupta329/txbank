@@ -1,19 +1,17 @@
 package org.txstate.edu.model;
 
-import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
-@Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "username"))
-public class UsersProfile extends BaseModel {
+/**
+ * Created by jyoti on 4/3/18.
+ */
+public class Registration implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String firstName;
-    private String middleName;
-    private String lastName;
     private String username;
+    private String password;
+    private String firstName;
+    private String lastName;
     private String address1;
     private String address2;
     private String city;
@@ -21,15 +19,23 @@ public class UsersProfile extends BaseModel {
     private Long zip;
     private String country;
     private String nationality;
-    private Date dob;
+    private java.util.Date dob;
     private String gender;
 
-    public Long getId() {
-        return id;
+    public String getUsername() {
+        return username;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -40,28 +46,12 @@ public class UsersProfile extends BaseModel {
         this.firstName = firstName;
     }
 
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
     public String getLastName() {
         return lastName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getAddress1() {
