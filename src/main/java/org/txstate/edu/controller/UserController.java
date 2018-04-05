@@ -26,30 +26,33 @@ public class UserController {
     @PostMapping("/users/sign-up")
     public void signUp(@RequestBody Registration registerForm) {
         //Cresting user object
-        Users user = new Users();
-        user.setPassword(bCryptPasswordEncoder.encode(registerForm.getPassword()));
-        user.setUsername(registerForm.getUsername());
-        userDetailsServiceImpl.addUser(user);
+        try {
+            Users user = new Users();
+            user.setPassword(bCryptPasswordEncoder.encode(registerForm.getPassword()));
+            user.setUsername(registerForm.getUsername());
+            userDetailsServiceImpl.addUser(user);
 
-        UsersProfile usersProfile = new UsersProfile();
-        usersProfile.setFirstName(registerForm.getFirstName());
-        usersProfile.setLastName(registerForm.getLastName());
-        usersProfile.setUsername(registerForm.getUsername());
-        usersProfile.setAddress1(registerForm.getAddress1());
-        usersProfile.setAddress2(registerForm.getAddress2());
-        usersProfile.setGender(registerForm.getGender());
-        usersProfile.setCity(registerForm.getCity());
-        usersProfile.setState(registerForm.getState());
-        usersProfile.setZip(registerForm.getZip());
-        usersProfile.setCountry(registerForm.getCountry());
-        usersProfile.setNationality(registerForm.getNationality());
-        usersProfile.setDob(registerForm.getDob());
-        usersProfile.setCreatedAt(new Date());
-        usersProfile.setCreatedBy(registerForm.getUsername());
-        usersProfile.setUpdatedAt(new Date());
-        usersProfile.setUpdateBy(registerForm.getUsername());
-        userDetailsServiceImpl.addUserProfile(usersProfile);
-
+            UsersProfile usersProfile = new UsersProfile();
+            usersProfile.setFirstName(registerForm.getFirstName());
+            usersProfile.setLastName(registerForm.getLastName());
+            usersProfile.setUsername(registerForm.getUsername());
+            usersProfile.setAddress1(registerForm.getAddress1());
+            usersProfile.setAddress2(registerForm.getAddress2());
+            usersProfile.setGender(registerForm.getGender());
+            usersProfile.setCity(registerForm.getCity());
+            usersProfile.setState(registerForm.getState());
+            usersProfile.setZip(registerForm.getZip());
+            usersProfile.setCountry(registerForm.getCountry());
+            usersProfile.setNationality(registerForm.getNationality());
+            usersProfile.setDob(registerForm.getDob());
+            usersProfile.setCreatedAt(new Date());
+            usersProfile.setCreatedBy(registerForm.getUsername());
+            usersProfile.setUpdatedAt(new Date());
+            usersProfile.setUpdateBy(registerForm.getUsername());
+            userDetailsServiceImpl.addUserProfile(usersProfile);
+        } catch (Exception e) {
+            throw new RuntimeException("Duplicate entry for username " + registerForm.getUsername());
+        }
     }
 
     @RequestMapping("/users")

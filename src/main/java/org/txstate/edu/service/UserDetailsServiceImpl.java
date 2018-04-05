@@ -46,9 +46,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public void updateUser(Users user, String username) {
-        Users userobj = userRepository.findByUsername(username);
-        userobj.setPassword(user.getPassword());
-        userRepository.save(user);
+        Users dbUser = userRepository.findByUsername(username);
+        dbUser.setPassword(user.getPassword());
+        userRepository.save(dbUser);
     }
 
 
