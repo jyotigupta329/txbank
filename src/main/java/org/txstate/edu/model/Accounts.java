@@ -1,7 +1,12 @@
 package org.txstate.edu.model;
 
+import javax.persistence.*;
+
+@Entity
 public class Accounts extends BaseModel {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountNo;
     private String type;
     private String balance;
@@ -13,14 +18,6 @@ public class Accounts extends BaseModel {
 
     public void setAccountNo(Long accountNo) {
         this.accountNo = accountNo;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getBalance() {
@@ -39,5 +36,11 @@ public class Accounts extends BaseModel {
         this.username = username;
     }
 
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 }
