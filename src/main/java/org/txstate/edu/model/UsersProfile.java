@@ -12,7 +12,6 @@ public class UsersProfile implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
-    private String middleName;
     private String lastName;
     private String username;
     private String address1;
@@ -24,6 +23,8 @@ public class UsersProfile implements Serializable {
     private String nationality;
     private Date dob;
     private String gender;
+    private String email;
+    private String phone;
 
     protected String createdBy;
     protected String updateBy;
@@ -44,14 +45,6 @@ public class UsersProfile implements Serializable {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
     }
 
     public String getLastName() {
@@ -140,6 +133,22 @@ public class UsersProfile implements Serializable {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getCreatedBy() {

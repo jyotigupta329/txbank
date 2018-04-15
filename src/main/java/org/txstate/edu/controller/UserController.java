@@ -44,6 +44,8 @@ public class UserController {
             usersProfile.setZip(registerForm.getZip());
             usersProfile.setCountry(registerForm.getCountry());
             usersProfile.setNationality(registerForm.getNationality());
+            usersProfile.setEmail(registerForm.getEmail());
+            usersProfile.setPhone(registerForm.getPhone());
             usersProfile.setDob(registerForm.getDob());
             usersProfile.setCreatedAt(new Date());
             usersProfile.setCreatedBy(registerForm.getUsername());
@@ -79,6 +81,18 @@ public class UserController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/users/{username}")
     public void deleteUser(@PathVariable String username) {
         userDetailsServiceImpl.deleteUser(username);
+    }
+
+//    Update Profile
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/users/profile/{username}")
+    public void updateUserProfile(@RequestBody UsersProfile usersProfile, @PathVariable String username) {
+        userDetailsServiceImpl.updateUserProfile(usersProfile, username);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/users/profile/{username}")
+    public UsersProfile getUsersProfile(@PathVariable String username) {
+        return userDetailsServiceImpl.getProfileByUserName(username);
     }
 
 }

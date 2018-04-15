@@ -1,6 +1,7 @@
 package org.txstate.edu.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -77,4 +78,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
+    public void updateUserProfile(UsersProfile usersProfile, String username) {
+
+        UsersProfile query_usersProfile = new UsersProfile();
+        query_usersProfile.setUsername(username);
+        Example<UsersProfile> example = Example.of(query_usersProfile);
+        UsersProfile dbUsersProfile = userProfileRepository.findOne(example);
+
+        dbUsersProfile.setPhone(usersProfile.getPhone());
+        dbUsersProfile.setEmail(usersProfile.getEmail());
+        dbUsersProfile.setZip(usersProfile.getZip());
+        dbUsersProfile.setCity(usersProfile.getCity());
+        dbUsersProfile.setState(usersProfile.getState());
+        dbUsersProfile.setAddress1(usersProfile.getAddress1());
+        dbUsersProfile.setAddress2(usersProfile.getAddress2());
+        dbUsersProfile.setNationality(usersProfile.getNationality());
+        userProfileRepository.save(dbUsersProfile);
+    }
+
+    public UsersProfile getProfileByUserName(String username) {
+
+        UsersProfile query_usersProfile = new UsersProfile();
+        query_usersProfile.setUsername(username);
+        Example<UsersProfile> example = Example.of(query_usersProfile);
+        return userProfileRepository.findOne(example);
+
+
+    }
 }
