@@ -86,13 +86,19 @@ public class UserController {
 //    Update Profile
 
     @RequestMapping(method = RequestMethod.PUT, value = "/users/profile/{username}")
-    public void updateUserProfile(@RequestBody UsersProfile usersProfile, @PathVariable String username) {
+    public void updateUserProfile(@RequestBody UsersProfile usersProfile, @RequestBody Users users, @PathVariable String username) {
         userDetailsServiceImpl.updateUserProfile(usersProfile, username);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/users/profile/{username}")
     public UsersProfile getUsersProfile(@PathVariable String username) {
         return userDetailsServiceImpl.getProfileByUserName(username);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/users/changePassword/{username}")
+    public void updateUserPassword(@RequestBody Users users, @PathVariable String username) {
+        users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
+        userDetailsServiceImpl.updateUserPassword(users, username);
     }
 
 }

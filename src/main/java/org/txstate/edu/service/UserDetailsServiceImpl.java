@@ -105,4 +105,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     }
+
+    public void updateUserPassword(Users users, String username) {
+
+        Users query_users = new Users();
+        query_users.setUsername(username);
+        query_users.setEnable(true);
+        query_users.setAccountNonExpired(true);
+        query_users.setAccountNonLocked(true);
+        Example<Users> example = Example.of(query_users);
+        Users dbUsers = userRepository.findOne(example);
+
+        dbUsers.setPassword(users.getPassword());
+        userRepository.save(dbUsers);
+
+    }
 }
