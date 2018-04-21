@@ -67,7 +67,7 @@ public class AccountService {
             long randNumberChecking = rand.nextInt(999999999) + 100000000;
             checking.setAccountNo(Long.valueOf(randNumberChecking));
             checking.setType("CHECKING");
-            checking.setBalance("0");
+            checking.setBalance("5000.00");
             accountRepository.save(checking);
         }
 

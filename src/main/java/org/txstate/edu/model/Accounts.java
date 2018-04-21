@@ -9,7 +9,7 @@ public class Accounts extends BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountNo;
     private String type;
-    private String balance;
+    private Double balance;
     private String username;
 
     public Long getAccountNo() {
@@ -20,11 +20,11 @@ public class Accounts extends BaseModel {
         this.accountNo = accountNo;
     }
 
-    public String getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 
