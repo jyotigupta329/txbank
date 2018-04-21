@@ -1,6 +1,7 @@
 package org.txstate.edu.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping("/accountSummary/{username}")
     public AccountSummary getAccountSummary(@PathVariable String username) {
         return accountService.getAccountSummary(username);
