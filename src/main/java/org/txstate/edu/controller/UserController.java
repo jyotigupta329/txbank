@@ -116,7 +116,7 @@ public class UserController {
         userDetailsServiceImpl.updateUserPassword(users, username);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @RequestMapping(method = RequestMethod.POST, value = "/users/activateAccount/{username}")
     public void activateAccount(@PathVariable String username) {
         userDetailsServiceImpl.activateAccount(username);

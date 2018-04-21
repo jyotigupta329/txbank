@@ -8,12 +8,20 @@ import java.io.Serializable;
 public class UsersIdentity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String idtype1;
     private String idno1;
     private String idtype2;
     private String idno2;
     private String username;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getIdtype1() {
         return idtype1;
