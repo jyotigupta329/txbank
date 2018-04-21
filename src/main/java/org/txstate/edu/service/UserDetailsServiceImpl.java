@@ -9,13 +9,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.txstate.edu.model.*;
+import org.txstate.edu.repository.RolesRepository;
 import org.txstate.edu.repository.UserProfileRepository;
 import org.txstate.edu.repository.UserRepository;
 import org.txstate.edu.repository.UsersIdentityRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +25,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RolesRepository rolesRepository;
 
     @Autowired
     private UserProfileRepository userProfileRepository;
@@ -88,6 +90,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public void addUser(Users user) {
+        Roles userRole = rolesRepository.findByRole("ROLE_USER");
+        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         userRepository.save(user);
     }
 

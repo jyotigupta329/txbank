@@ -65,7 +65,7 @@ public class UserController {
             userDetailsServiceImpl.addUsersIdentity(usersIdentity);
 
         } catch (Exception e) {
-            // e.printStackTrace();
+            e.printStackTrace();
             throw new RuntimeException("Duplicate entry for username " + registerForm.getUsername());
         }
     }
