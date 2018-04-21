@@ -57,20 +57,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             Example<UsersProfile> example = Example.of(query_usersProfile);
             UsersProfile usersProfile = userProfileRepository.findOne(example);
 
-            userForm.setFirstName(usersProfile.getFirstName());
-            userForm.setLastName(usersProfile.getLastName());
-            userForm.setUsername(usersProfile.getUsername());
-            userForm.setAddress1(usersProfile.getAddress1());
-            userForm.setAddress2(usersProfile.getAddress2());
-            userForm.setGender(usersProfile.getGender());
-            userForm.setCity(usersProfile.getCity());
-            userForm.setState(usersProfile.getState());
-            userForm.setZip(usersProfile.getZip());
-            userForm.setCountry(usersProfile.getCountry());
-            userForm.setNationality(usersProfile.getNationality());
-            userForm.setEmail(usersProfile.getEmail());
-            userForm.setPhone(usersProfile.getPhone());
-            userForm.setDob(usersProfile.getDob());
+            if (usersProfile != null) {
+                userForm.setFirstName(usersProfile.getFirstName());
+                userForm.setLastName(usersProfile.getLastName());
+                userForm.setUsername(usersProfile.getUsername());
+                userForm.setAddress1(usersProfile.getAddress1());
+                userForm.setAddress2(usersProfile.getAddress2());
+                userForm.setGender(usersProfile.getGender());
+                userForm.setCity(usersProfile.getCity());
+                userForm.setState(usersProfile.getState());
+                userForm.setZip(usersProfile.getZip());
+                userForm.setCountry(usersProfile.getCountry());
+                userForm.setNationality(usersProfile.getNationality());
+                userForm.setEmail(usersProfile.getEmail());
+                userForm.setPhone(usersProfile.getPhone());
+                userForm.setDob(usersProfile.getDob());
+            }
 
             UsersIdentity query_usersIdentity = new UsersIdentity();
             query_usersIdentity.setUsername(user.getUsername());

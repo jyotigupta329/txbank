@@ -53,7 +53,7 @@ public class TransactionService {
         accountTo.setBalance(accountTo.getBalance() + transaction.getAmount());
         accountTo.setUpdatedAt(new Date());
         accountRepository.save(accountTo);
-
+        transaction.setCreatedDate(new Date());
         transactionRepository.save(transaction);
     }
 

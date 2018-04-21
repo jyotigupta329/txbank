@@ -1,7 +1,11 @@
 package org.txstate.edu.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by jyoti on 4/21/18.
@@ -17,7 +21,7 @@ public class Transaction implements Serializable {
     private Double amount;
     private String message;
     private String createdBy;
-    private String createdDate;
+    private Date createdDate;
 
     public Long getTransactionId() {
         return transactionId;
@@ -67,11 +71,11 @@ public class Transaction implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public String getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 }
