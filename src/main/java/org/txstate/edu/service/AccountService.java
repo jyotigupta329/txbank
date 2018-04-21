@@ -9,6 +9,7 @@ import org.txstate.edu.model.UsersProfile;
 import org.txstate.edu.repository.AccountRepository;
 import org.txstate.edu.repository.UserProfileRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -68,6 +69,8 @@ public class AccountService {
             checking.setAccountNo(Long.valueOf(randNumberChecking));
             checking.setType("CHECKING");
             checking.setBalance(5000.00);
+            checking.setCreatedAt(new Date());
+            checking.setUpdatedAt(new Date());
             accountRepository.save(checking);
         }
 
@@ -78,6 +81,8 @@ public class AccountService {
             saving.setAccountNo(Long.valueOf(randNumberSaving));
             saving.setType("SAVING");
             saving.setBalance(5000.00);
+            saving.setCreatedAt(new Date());
+            saving.setUpdatedAt(new Date());
             accountRepository.save(saving);
         }
     }

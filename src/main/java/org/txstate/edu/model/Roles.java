@@ -1,10 +1,11 @@
 package org.txstate.edu.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "role"))
-public class Roles extends BaseModel {
+public class Roles implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

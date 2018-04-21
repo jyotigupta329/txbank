@@ -107,7 +107,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     public void deleteUser(String username) {
-        userRepository.delete(username);
+        Users dbUser = userRepository.findByUsername(username);
+        userRepository.delete(dbUser);
     }
 
     /**

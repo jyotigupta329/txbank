@@ -8,5 +8,5 @@ import org.txstate.edu.model.UsersIdentity;
  * Created by jyoti on 4/19/18.
  */
 @Repository
-public interface UsersIdentityRepository extends JpaRepository<UsersIdentity, String> {
+public interface UsersIdentityRepository extends JpaRepository<UsersIdentity, Long> {
 }

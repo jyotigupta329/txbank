@@ -8,5 +8,5 @@ import org.txstate.edu.model.UsersProfile;
  * Created by jyoti on 4/2/18.
  */
 @Repository
-public interface UserProfileRepository extends JpaRepository<UsersProfile, String> {
+public interface UserProfileRepository extends JpaRepository<UsersProfile, Long> {
 }
