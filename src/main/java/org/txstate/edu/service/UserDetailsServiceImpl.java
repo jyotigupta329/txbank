@@ -185,4 +185,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         accountService.createAccount(username);
     }
 
+    public void suspendAccount(String username) {
+        Users user = userRepository.findByUsername(username);
+        user.setEnable(false);
+        user.setAccountNonLocked(false);
+        user.setAccountNonExpired(false);
+        userRepository.save(user);
+
+        accountService.createAccount(username);
+    }
+
 }

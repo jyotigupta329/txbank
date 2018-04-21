@@ -117,9 +117,16 @@ public class UserController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.POST, value = "/users/activateAccount/{username}")
     public void activateAccount(@PathVariable String username) {
         userDetailsServiceImpl.activateAccount(username);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(method = RequestMethod.POST, value = "/users/suspendAccount/{username}")
+    public void suspendAccount(@PathVariable String username) {
+        userDetailsServiceImpl.suspendAccount(username);
     }
 
 }
