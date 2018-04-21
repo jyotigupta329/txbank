@@ -1,19 +1,20 @@
 package org.txstate.edu.model;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "username"))
-public class UsersProfile implements Serializable {
+/**
+ * Created by jyoti on 4/3/18.
+ */
+public class UserForm implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String username;
+    private String password;
+    private boolean enable;
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
     private String firstName;
     private String lastName;
-    private String username;
     private String address1;
     private String address2;
     private String city;
@@ -25,18 +26,56 @@ public class UsersProfile implements Serializable {
     private String gender;
     private String email;
     private String phone;
+    private String idtype1;
+    private String idno1;
+    private String idtype2;
+    private String idno2;
 
-    private String createdBy;
-    private String updateBy;
-    private Date createdAt;
-    private Date updatedAt;
+    private String accountStatus;
 
-    public Long getId() {
-        return id;
+    public String getUsername() {
+        return username;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+        if (enable) {
+            this.accountStatus = "Active";
+        } else {
+            this.accountStatus = "Pending";
+        }
+    }
+
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
     public String getFirstName() {
@@ -53,14 +92,6 @@ public class UsersProfile implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getAddress1() {
@@ -151,35 +182,43 @@ public class UsersProfile implements Serializable {
         this.phone = phone;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getIdtype1() {
+        return idtype1;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setIdtype1(String idtype1) {
+        this.idtype1 = idtype1;
     }
 
-    public String getUpdateBy() {
-        return updateBy;
+    public String getIdno1() {
+        return idno1;
     }
 
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
+    public void setIdno1(String idno1) {
+        this.idno1 = idno1;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getIdtype2() {
+        return idtype2;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setIdtype2(String idtype2) {
+        this.idtype2 = idtype2;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getIdno2() {
+        return idno2;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setIdno2(String idno2) {
+        this.idno2 = idno2;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
     }
 }

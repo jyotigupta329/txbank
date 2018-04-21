@@ -3,8 +3,9 @@ package org.txstate.edu.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.txstate.edu.model.Registration;
+import org.txstate.edu.model.UserForm;
 import org.txstate.edu.model.Users;
+import org.txstate.edu.model.UsersIdentity;
 import org.txstate.edu.model.UsersProfile;
 import org.txstate.edu.service.UserDetailsServiceImpl;
 
@@ -20,11 +21,12 @@ public class UserController {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
+
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/users/sign-up")
-    public void signUp(@RequestBody Registration registerForm) {
+    public void signUp(@RequestBody UserForm registerForm) {
         //Cresting user object
         try {
             Users user = new Users();
@@ -52,13 +54,23 @@ public class UserController {
             usersProfile.setUpdatedAt(new Date());
             usersProfile.setUpdateBy(registerForm.getUsername());
             userDetailsServiceImpl.addUserProfile(usersProfile);
+
+            UsersIdentity usersIdentity = new UsersIdentity();
+            usersIdentity.setIdno1(registerForm.getIdno1());
+            usersIdentity.setIdno2(registerForm.getIdno2());
+            usersIdentity.setIdtype1(registerForm.getIdtype1());
+            usersIdentity.setIdtype2(registerForm.getIdtype2());
+            usersIdentity.setUsername(registerForm.getUsername());
+            userDetailsServiceImpl.addUsersIdentity(usersIdentity);
+
         } catch (Exception e) {
+            // e.printStackTrace();
             throw new RuntimeException("Duplicate entry for username " + registerForm.getUsername());
         }
     }
 
     @RequestMapping("/users")
-    public List<Users> getAllUsers() {
+    public List<UserForm> getAllUsers() {
         return userDetailsServiceImpl.getAllUsers();
     }
 
@@ -86,7 +98,7 @@ public class UserController {
 //    Update Profile
 
     @RequestMapping(method = RequestMethod.PUT, value = "/users/profile/{username}")
-    public void updateUserProfile(@RequestBody UsersProfile usersProfile, @RequestBody Users users, @PathVariable String username) {
+    public void updateUserProfile(@RequestBody UsersProfile usersProfile, @PathVariable String username) {
         userDetailsServiceImpl.updateUserProfile(usersProfile, username);
     }
 
@@ -99,6 +111,11 @@ public class UserController {
     public void updateUserPassword(@RequestBody Users users, @PathVariable String username) {
         users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
         userDetailsServiceImpl.updateUserPassword(users, username);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/users/activateAccount/{username}")
+    public void activateAccount(@PathVariable String username) {
+        userDetailsServiceImpl.activateAccount(username);
     }
 
 }

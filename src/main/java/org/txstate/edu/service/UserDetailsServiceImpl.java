@@ -8,12 +8,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.txstate.edu.model.Roles;
-import org.txstate.edu.model.Users;
-import org.txstate.edu.model.UsersProfile;
+import org.txstate.edu.model.*;
 import org.txstate.edu.repository.UserProfileRepository;
 import org.txstate.edu.repository.UserRepository;
+import org.txstate.edu.repository.UsersIdentityRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,12 +30,61 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserProfileRepository userProfileRepository;
 
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private UsersIdentityRepository usersIdentityRepository;
+
     public Users getByUserName(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public List<Users> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserForm> getAllUsers() {
+        List<UserForm> userForms = new ArrayList<>();
+        List<Users> users = userRepository.findAll();
+        for (Users user : users) {
+            UserForm userForm = new UserForm();
+            userForm.setUsername(user.getUsername());
+            userForm.setEnable(user.isEnable());
+            userForm.setAccountNonExpired(user.isAccountNonExpired());
+            userForm.setAccountNonLocked(user.isAccountNonLocked());
+
+            UsersProfile query_usersProfile = new UsersProfile();
+            query_usersProfile.setUsername(user.getUsername());
+            Example<UsersProfile> example = Example.of(query_usersProfile);
+            UsersProfile usersProfile = userProfileRepository.findOne(example);
+
+            userForm.setFirstName(usersProfile.getFirstName());
+            userForm.setLastName(usersProfile.getLastName());
+            userForm.setUsername(usersProfile.getUsername());
+            userForm.setAddress1(usersProfile.getAddress1());
+            userForm.setAddress2(usersProfile.getAddress2());
+            userForm.setGender(usersProfile.getGender());
+            userForm.setCity(usersProfile.getCity());
+            userForm.setState(usersProfile.getState());
+            userForm.setZip(usersProfile.getZip());
+            userForm.setCountry(usersProfile.getCountry());
+            userForm.setNationality(usersProfile.getNationality());
+            userForm.setEmail(usersProfile.getEmail());
+            userForm.setPhone(usersProfile.getPhone());
+            userForm.setDob(usersProfile.getDob());
+
+            UsersIdentity query_usersIdentity = new UsersIdentity();
+            query_usersIdentity.setUsername(user.getUsername());
+            Example<UsersIdentity> exampleIdentity = Example.of(query_usersIdentity);
+            UsersIdentity usersIdentity = usersIdentityRepository.findOne(exampleIdentity);
+
+            if (usersIdentity != null) {
+                userForm.setIdno1(usersIdentity.getIdno1());
+                userForm.setIdno2(usersIdentity.getIdno2());
+                userForm.setIdtype1(usersIdentity.getIdtype1());
+                userForm.setIdtype2(usersIdentity.getIdtype2());
+            }
+            userForms.add(userForm);
+        }
+
+        return userForms;
     }
 
     public void addUser(Users user) {
@@ -44,6 +93,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public void addUserProfile(UsersProfile usersProfile) {
         userProfileRepository.save(usersProfile);
+    }
+
+    public void addUsersIdentity(UsersIdentity usersIdentity) {
+        usersIdentityRepository.save(usersIdentity);
     }
 
     public void updateUser(Users user, String username) {
@@ -120,4 +173,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userRepository.save(dbUsers);
 
     }
+
+
+    public void activateAccount(String username) {
+        Users user = userRepository.findByUsername(username);
+        user.setEnable(true);
+        user.setAccountNonLocked(true);
+        user.setAccountNonExpired(true);
+        userRepository.save(user);
+
+        accountService.createAccount(username);
+    }
+
 }
