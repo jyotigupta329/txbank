@@ -1,8 +1,11 @@
 package org.txstate.edu.config;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -12,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.txstate.edu.security.SecurityConstants.*;
 
@@ -42,14 +47,20 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
             // parse the token.
-            String user = Jwts.parser()
+            Claims jwtClaims = Jwts.parser()
                     .setSigningKey(SECRET.getBytes())
                     .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                    .getBody()
-                    .getSubject();
+                    .getBody();
+            String user = jwtClaims.getSubject();
+            ArrayList authorities = (ArrayList) jwtClaims.get("role");
+            List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
+            for (Object al : authorities) {
+                Map authority = (Map) al;
+                simpleGrantedAuthorities.add(new SimpleGrantedAuthority((String) authority.get("authority")));
 
+            }
             if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                return new UsernamePasswordAuthenticationToken(user, null, simpleGrantedAuthorities);
             }
             return null;
         }

@@ -1,6 +1,7 @@
 package org.txstate.edu.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.txstate.edu.model.UserForm;
@@ -69,6 +70,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/users")
     public List<UserForm> getAllUsers() {
         return userDetailsServiceImpl.getAllUsers();
@@ -90,6 +92,7 @@ public class UserController {
         userDetailsServiceImpl.updateUser(user, username);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.DELETE, value = "/users/{username}")
     public void deleteUser(@PathVariable String username) {
         userDetailsServiceImpl.deleteUser(username);
@@ -113,6 +116,7 @@ public class UserController {
         userDetailsServiceImpl.updateUserPassword(users, username);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.POST, value = "/users/activateAccount/{username}")
     public void activateAccount(@PathVariable String username) {
         userDetailsServiceImpl.activateAccount(username);

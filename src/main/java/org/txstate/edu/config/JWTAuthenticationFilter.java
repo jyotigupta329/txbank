@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.txstate.edu.security.SecurityConstants.*;
 
@@ -52,7 +54,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
 
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", ((User) auth.getPrincipal()).getAuthorities());
+
         String token = Jwts.builder()
+                .setClaims(claims)
                 .setSubject(((User) auth.getPrincipal()).getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
