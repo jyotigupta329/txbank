@@ -100,11 +100,19 @@ public class AccountService {
         return beneficiaryRepository.getByUsername(username);
     }
 
-    public void addBeneficiaryAccounts(BeneficiaryAccount beneficiaryAccount) {
+    public void addBeneficiaryAccounts(BeneficiaryAccount beneficiaryAccount, String username) {
         Accounts accounts = accountRepository.findOne(beneficiaryAccount.getBeneficiaryAccountNo());
         if (accounts == null) {
             throw new RuntimeException("Invalid account no");
         }
+
+        List<BeneficiaryAccount> beneficiaryAccounts = beneficiaryRepository.getByUsername(username);
+        for (BeneficiaryAccount account : beneficiaryAccounts) {
+            if (account.getBeneficiaryAccountNo().equals(beneficiaryAccount.getBeneficiaryAccountNo())) {
+                throw new RuntimeException("Beneficiary already exists");
+            }
+        }
+        beneficiaryAccount.setUsername(username);
         beneficiaryRepository.save(beneficiaryAccount);
     }
 }

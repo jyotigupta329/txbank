@@ -46,7 +46,7 @@ public class AccountController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method = RequestMethod.POST, value = "/accounts/beneficiary")
     public void addAccountsBeneficiary(@RequestBody BeneficiaryAccount beneficiaryAccount) {
-        accountService.addBeneficiaryAccounts(beneficiaryAccount);
+        accountService.addBeneficiaryAccounts(beneficiaryAccount, SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
