@@ -10,6 +10,7 @@ import org.txstate.edu.repository.TransactionRepository;
 import org.txstate.edu.repository.UserRepository;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jyoti on 4/21/18.
@@ -55,6 +56,10 @@ public class TransactionService {
         accountRepository.save(accountTo);
         transaction.setCreatedDate(new Date());
         transactionRepository.save(transaction);
+    }
+
+    public List<Transaction> getTransactionByUsername(String username) {
+        return transactionRepository.getByCreatedBy(username);
     }
 
 }

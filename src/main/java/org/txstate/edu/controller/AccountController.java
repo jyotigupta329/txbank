@@ -2,11 +2,14 @@ package org.txstate.edu.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.txstate.edu.model.AccountSummary;
 import org.txstate.edu.model.Transaction;
 import org.txstate.edu.service.AccountService;
 import org.txstate.edu.service.TransactionService;
+
+import java.util.List;
 
 /**
  * Created by jyoti on 4/12/18.
@@ -29,5 +32,10 @@ public class AccountController {
     @RequestMapping(method = RequestMethod.POST, value = "/transaction")
     public void doTransaction(@RequestBody Transaction transaction) {
         transactionService.doTransaction(transaction);
+    }
+
+    @RequestMapping(value = "/transaction")
+    public List<Transaction> getTransaction() {
+        return transactionService.getTransactionByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }
