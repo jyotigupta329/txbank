@@ -5,8 +5,10 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.txstate.edu.model.AccountSummary;
 import org.txstate.edu.model.Accounts;
+import org.txstate.edu.model.BeneficiaryAccount;
 import org.txstate.edu.model.UsersProfile;
 import org.txstate.edu.repository.AccountRepository;
+import org.txstate.edu.repository.BeneficiaryRepository;
 import org.txstate.edu.repository.UserProfileRepository;
 
 import java.util.Date;
@@ -24,6 +26,9 @@ public class AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private BeneficiaryRepository beneficiaryRepository;
 
     public AccountSummary getAccountSummary(String username) {
         UsersProfile userProfile = new UsersProfile();
@@ -87,4 +92,19 @@ public class AccountService {
         }
     }
 
+    public List<Accounts> getUserAccounts(String username) {
+        return accountRepository.findByUsername(username);
+    }
+
+    public List<BeneficiaryAccount> getBeneficiaryAccounts(String username) {
+        return beneficiaryRepository.getByUsername(username);
+    }
+
+    public void addBeneficiaryAccounts(BeneficiaryAccount beneficiaryAccount) {
+        Accounts accounts = accountRepository.findOne(beneficiaryAccount.getBeneficiaryAccountNo());
+        if (accounts == null) {
+            throw new RuntimeException("Invalid account no");
+        }
+        beneficiaryRepository.save(beneficiaryAccount);
+    }
 }

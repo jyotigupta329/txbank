@@ -18,6 +18,7 @@ public class Transaction implements Serializable {
     private Long transactionId;
     private Long fromAccount;
     private Long toAccount;
+    private String transactionType;
     private Double amount;
     private String message;
     private String createdBy;
@@ -77,5 +78,13 @@ public class Transaction implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
     }
 }

@@ -37,6 +37,9 @@ public class TransactionService {
         if (accountFrom == null || accountTo == null) {
             throw new RuntimeException("Invalid Account Number");
         }
+        if (accountFrom.getAccountNo().equals(accountTo.getAccountNo())) {
+            throw new RuntimeException("Cannot transfer to same account");
+        }
         if (accountFrom.getBalance() < transaction.getAmount()) {
             throw new RuntimeException("Insufficient Balance");
         }
@@ -54,12 +57,28 @@ public class TransactionService {
         accountTo.setBalance(accountTo.getBalance() + transaction.getAmount());
         accountTo.setUpdatedAt(new Date());
         accountRepository.save(accountTo);
+
         transaction.setCreatedDate(new Date());
+        transaction.setTransactionType("DEBIT");
         transactionRepository.save(transaction);
+        Transaction toTransaction = new Transaction();
+
+        toTransaction.setFromAccount(transaction.getToAccount());
+        toTransaction.setAmount(transaction.getAmount());
+        toTransaction.setCreatedBy(transaction.getCreatedBy());
+        toTransaction.setToAccount(transaction.getFromAccount());
+        toTransaction.setTransactionType("CREDIT");
+        toTransaction.setCreatedDate(new Date());
+        toTransaction.setMessage("Money deposited.");
+        transactionRepository.save(toTransaction);
     }
 
     public List<Transaction> getTransactionByUsername(String username) {
         return transactionRepository.getByCreatedBy(username);
+    }
+
+    public List<Transaction> getTransactionByAccount(Long accountNo) {
+        return transactionRepository.getByFromAccount(accountNo);
     }
 
 }
