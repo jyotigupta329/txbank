@@ -30,6 +30,12 @@ public class AccountService {
     @Autowired
     private BeneficiaryRepository beneficiaryRepository;
 
+    /**
+     * Provided the account summary of a user in the system.
+     *
+     * @param username
+     * @return AccountSummary
+     */
     public AccountSummary getAccountSummary(String username) {
         UsersProfile userProfile = new UsersProfile();
         userProfile.setUsername(username);
@@ -100,6 +106,11 @@ public class AccountService {
         return beneficiaryRepository.getByUsername(username);
     }
 
+    /**
+     *
+     * @param beneficiaryAccount
+     * @param username
+     */
     public void addBeneficiaryAccounts(BeneficiaryAccount beneficiaryAccount, String username) {
         Accounts accounts = accountRepository.findOne(beneficiaryAccount.getBeneficiaryAccountNo());
         if (accounts == null) {

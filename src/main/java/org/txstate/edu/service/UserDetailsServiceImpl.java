@@ -9,10 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.txstate.edu.model.*;
-import org.txstate.edu.repository.RolesRepository;
-import org.txstate.edu.repository.UserProfileRepository;
-import org.txstate.edu.repository.UserRepository;
-import org.txstate.edu.repository.UsersIdentityRepository;
+import org.txstate.edu.repository.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,6 +34,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UsersIdentityRepository usersIdentityRepository;
+
+    @Autowired
+    private NotificationPolicyRepository notificationPolicyRepository;
 
     public Users getByUserName(String username) {
         return userRepository.findByUsername(username);
@@ -189,7 +189,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         user.setAccountNonExpired(true);
         userRepository.save(user);
 
+
         accountService.createAccount(username);
+        NotificationPolicy notificationPolicy = notificationPolicyRepository.findByUsername(username);
+        if (notificationPolicy == null) {
+            notificationPolicy = new NotificationPolicy();
+            notificationPolicy.setCreditAmount(50D);
+            notificationPolicy.setDebitAmount(50D);
+            notificationPolicy.setEnable(true);
+            notificationPolicy.setPasswordUpdate(true);
+            notificationPolicy.setProfileUpdate(true);
+            notificationPolicy.setUsername(username);
+            notificationPolicyRepository.save(notificationPolicy);
+        }
     }
 
     public void suspendAccount(String username) {

@@ -27,6 +27,9 @@ public class TransactionService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public void doTransaction(Transaction transaction) {
         Accounts accountFrom = accountRepository.findOne(transaction.getFromAccount());
 
@@ -71,6 +74,8 @@ public class TransactionService {
         toTransaction.setCreatedDate(new Date());
         toTransaction.setMessage("Money deposited.");
         transactionRepository.save(toTransaction);
+
+        notificationService.notifyOnTransaction(transaction, accountFrom, accountTo);
     }
 
     public List<Transaction> getTransactionByUsername(String username) {

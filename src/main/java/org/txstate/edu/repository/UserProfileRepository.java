@@ -9,4 +9,6 @@ import org.txstate.edu.model.UsersProfile;
  */
 @Repository
 public interface UserProfileRepository extends JpaRepository<UsersProfile, Long> {
+
+    UsersProfile findByUsername(String username);
 }
