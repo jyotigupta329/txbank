@@ -107,4 +107,18 @@ public class NotificationService {
         }
     }
 
+    public NotificationPolicy getNotificationPolicy(String username) {
+        NotificationPolicy notificationPolicy = notificationPolicyRepository.findByUsername(username);
+        return notificationPolicy;
+    }
+
+    public void updateNotificationPolicy(NotificationPolicy notificationPolicy){
+        NotificationPolicy dbNotificationPolicy = notificationPolicyRepository.findByUsername(notificationPolicy.getUsername());
+        dbNotificationPolicy.setProfileUpdate(notificationPolicy.getProfileUpdate());
+        dbNotificationPolicy.setPasswordUpdate(notificationPolicy.getPasswordUpdate());
+        dbNotificationPolicy.setEnable(notificationPolicy.getEnable());
+        dbNotificationPolicy.setDebitAmount(notificationPolicy.getDebitAmount());
+        dbNotificationPolicy.setCreditAmount(notificationPolicy.getCreditAmount());
+        notificationPolicyRepository.save(dbNotificationPolicy);
+    }
 }

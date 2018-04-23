@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.txstate.edu.model.AccountSummary;
-import org.txstate.edu.model.Accounts;
-import org.txstate.edu.model.BeneficiaryAccount;
-import org.txstate.edu.model.Transaction;
+import org.txstate.edu.model.*;
 import org.txstate.edu.service.AccountService;
+import org.txstate.edu.service.NotificationService;
 import org.txstate.edu.service.TransactionService;
 
 import java.util.List;
@@ -22,6 +20,10 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private NotificationService notificationService;
+
     @Autowired
     private TransactionService transactionService;
 
@@ -65,6 +67,18 @@ public class AccountController {
     @RequestMapping(value = "/transaction/{accountNo}")
     public List<Transaction> getTransactionByAccountNo(@PathVariable Long accountNo) {
         return transactionService.getTransactionByAccount(accountNo);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @RequestMapping(value = "/notification")
+    public NotificationPolicy getNotificationPolicy() {
+       return notificationService.getNotificationPolicy(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @RequestMapping(method = RequestMethod.PUT, value = "/notification")
+    public void updateNotificationPolicy(@RequestBody NotificationPolicy notificationPolicy) {
+        notificationService.updateNotificationPolicy(notificationPolicy);
     }
 
 }

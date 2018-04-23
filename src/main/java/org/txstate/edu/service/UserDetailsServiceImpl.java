@@ -162,8 +162,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         query_usersProfile.setUsername(username);
         Example<UsersProfile> example = Example.of(query_usersProfile);
         return userProfileRepository.findOne(example);
-
-
     }
 
     public void updateUserPassword(Users users, String username) {
