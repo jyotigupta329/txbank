@@ -32,7 +32,6 @@ public class AccountService {
 
     /**
      * Provided the account summary of a user in the system.
-     *
      * @param username
      * @return AccountSummary
      */
@@ -54,9 +53,13 @@ public class AccountService {
         return accountSummary;
     }
 
+    /**
+     * Saving and checking account is created with default balance
+     * @param username
+     */
     public void createAccount(String username) {
-        boolean createCheckingAccount = false;
-        boolean createSavingAccount = false;
+        boolean isCheckingAccountExist = false;
+        boolean isSavingAccountExist = false;
 
         Accounts accounts = new Accounts();
         accounts.setUsername(username);
@@ -65,15 +68,16 @@ public class AccountService {
 
         for (Accounts acc : dbAccounts) {
             if (acc.getType().equals("CHECKING")) {
-                createCheckingAccount = true;
+                isCheckingAccountExist = true;
             }
             if (acc.getType().equals("SAVING")) {
-                createSavingAccount = true;
+                isSavingAccountExist = true;
             }
         }
 
         Random rand = new Random();
-        if (!createCheckingAccount) {
+        // If the isCheckingAccountExist flag remains false then create a checking account
+        if (!isCheckingAccountExist) {
             Accounts checking = new Accounts();
             checking.setUsername(username);
             long randNumberChecking = rand.nextInt(999999999) + 100000000;
@@ -85,7 +89,7 @@ public class AccountService {
             accountRepository.save(checking);
         }
 
-        if (!createSavingAccount) {
+        if (!isSavingAccountExist) {
             Accounts saving = new Accounts();
             saving.setUsername(username);
             long randNumberSaving = rand.nextInt(555555555) + 100000000;
@@ -98,16 +102,29 @@ public class AccountService {
         }
     }
 
+    /**
+     * To get user account details
+     * @param username
+     * @return
+     */
+
     public List<Accounts> getUserAccounts(String username) {
         return accountRepository.findByUsername(username);
     }
+
+    /**
+     * To get beneficiary account details
+     * @param username
+     * @return
+     */
 
     public List<BeneficiaryAccount> getBeneficiaryAccounts(String username) {
         return beneficiaryRepository.getByUsername(username);
     }
 
+
     /**
-     *
+     * To add beneficiary account to database
      * @param beneficiaryAccount
      * @param username
      */

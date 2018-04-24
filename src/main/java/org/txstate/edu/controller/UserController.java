@@ -76,26 +76,10 @@ public class UserController {
         return userDetailsServiceImpl.getAllUsers();
     }
 
-    @RequestMapping("/users/{username}")
-    public Users getByUserName(@PathVariable String username) {
-        return userDetailsServiceImpl.getByUserName(username);
-    }
-
     @RequestMapping(method = RequestMethod.POST, value = "/users")
     public void addUser(@RequestBody Users user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userDetailsServiceImpl.addUser(user);
-    }
-
-    @RequestMapping(method = RequestMethod.PUT, value = "/users/{username}")
-    public void updateUser(@RequestBody Users user, @PathVariable String username) {
-        userDetailsServiceImpl.updateUser(user, username);
-    }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(method = RequestMethod.DELETE, value = "/users/{username}")
-    public void deleteUser(@PathVariable String username) {
-        userDetailsServiceImpl.deleteUser(username);
     }
 
 //    Update Profile

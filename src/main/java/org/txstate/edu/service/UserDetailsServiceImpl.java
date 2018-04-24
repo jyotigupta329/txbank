@@ -38,10 +38,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private NotificationPolicyRepository notificationPolicyRepository;
 
-    public Users getByUserName(String username) {
-        return userRepository.findByUsername(username);
-    }
+    @Autowired
+    private NotificationService notificationService;
 
+    /**
+     * To get List of users called by admin
+     * @return
+     */
     public List<UserForm> getAllUsers() {
         List<UserForm> userForms = new ArrayList<>();
         List<Users> users = userRepository.findAll();
@@ -91,30 +94,32 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userForms;
     }
 
+    /**
+     * Add user
+     * @param user
+     */
     public void addUser(Users user) {
         Roles userRole = rolesRepository.findByRole("ROLE_USER");
-        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
+        HashSet<Roles> rolesSet = new HashSet<>();
+        rolesSet.add(userRole);
+        user.setRoles(rolesSet);
         userRepository.save(user);
     }
 
+    /**
+     * This is called only at the time of registration
+     * @param usersProfile
+     */
     public void addUserProfile(UsersProfile usersProfile) {
         userProfileRepository.save(usersProfile);
     }
 
+    /**
+     * Tis is called at the time of registration
+     * @param usersIdentity
+     */
     public void addUsersIdentity(UsersIdentity usersIdentity) {
         usersIdentityRepository.save(usersIdentity);
-    }
-
-    public void updateUser(Users user, String username) {
-        Users dbUser = userRepository.findByUsername(username);
-        dbUser.setPassword(user.getPassword());
-        userRepository.save(dbUser);
-    }
-
-
-    public void deleteUser(String username) {
-        Users dbUser = userRepository.findByUsername(username);
-        userRepository.delete(dbUser);
     }
 
     /**
@@ -138,6 +143,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     * User can update their profile
+     * @param usersProfile
+     * @param username
+     */
     public void updateUserProfile(UsersProfile usersProfile, String username) {
 
         UsersProfile query_usersProfile = new UsersProfile();
@@ -154,8 +165,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         dbUsersProfile.setAddress2(usersProfile.getAddress2());
         dbUsersProfile.setNationality(usersProfile.getNationality());
         userProfileRepository.save(dbUsersProfile);
+        notificationService.notifyOnProfileUpdate(username);
     }
 
+    /**
+     * to display the user profile
+     * @param username
+     * @return
+     */
     public UsersProfile getProfileByUserName(String username) {
 
         UsersProfile query_usersProfile = new UsersProfile();
@@ -164,6 +181,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userProfileRepository.findOne(example);
     }
 
+    /**
+     * update password
+     * @param users
+     * @param username
+     */
     public void updateUserPassword(Users users, String username) {
 
         Users query_users = new Users();
@@ -176,10 +198,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         dbUsers.setPassword(users.getPassword());
         userRepository.save(dbUsers);
+        notificationService.notifyOnChangePassword(username);
 
     }
 
-
+    /**
+     * The user is activated by admin
+     * @param username
+     */
     public void activateAccount(String username) {
         Users user = userRepository.findByUsername(username);
         user.setEnable(true);
@@ -188,6 +214,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userRepository.save(user);
 
 
+        // When Admin activate the user for the first time then system creates two default
+        //accounts for the user (Checking and Saving)
         accountService.createAccount(username);
         NotificationPolicy notificationPolicy = notificationPolicyRepository.findByUsername(username);
         if (notificationPolicy == null) {
@@ -202,6 +230,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
+    /**
+     * user deactivated by the admin
+     * @param username
+     */
     public void suspendAccount(String username) {
         Users user = userRepository.findByUsername(username);
         user.setEnable(false);

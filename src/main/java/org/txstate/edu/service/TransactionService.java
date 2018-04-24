@@ -30,6 +30,10 @@ public class TransactionService {
     @Autowired
     private NotificationService notificationService;
 
+    /**
+     *
+     * @param transaction
+     */
     public void doTransaction(Transaction transaction) {
         Accounts accountFrom = accountRepository.findOne(transaction.getFromAccount());
 
@@ -78,10 +82,20 @@ public class TransactionService {
         notificationService.notifyOnTransaction(transaction, accountFrom, accountTo);
     }
 
+    /**
+     *
+     * @param username
+     * @return
+     */
     public List<Transaction> getTransactionByUsername(String username) {
         return transactionRepository.getByCreatedBy(username);
     }
 
+    /**
+     *
+     * @param accountNo
+     * @return
+     */
     public List<Transaction> getTransactionByAccount(Long accountNo) {
         return transactionRepository.getByFromAccount(accountNo);
     }

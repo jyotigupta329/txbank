@@ -37,6 +37,9 @@ public class NotificationService {
 
     private static StringBuilder htmlTemplate = new StringBuilder();
 
+    /**
+     * This is called when this spring container is started.
+     */
     @PostConstruct
     public void afterPropertiesSet() {
 
@@ -53,6 +56,13 @@ public class NotificationService {
         }
     }
 
+    /**
+     * Email notification enabled for both to and from accounts on transaction
+     *
+     * @param transaction
+     * @param fromAccount
+     * @param toAccount
+     */
     public void notifyOnTransaction(Transaction transaction, Accounts fromAccount, Accounts toAccount) {
 
         UsersProfile toUserProfile = userProfileRepository.findByUsername(toAccount.getUsername());
@@ -90,13 +100,25 @@ public class NotificationService {
     }
 
     public void notifyOnProfileUpdate(String username) {
-
+        UsersProfile usersProfile = userProfileRepository.findByUsername(username);
+        String message = "Your profile is updated.";
+        this.sendMail(usersProfile.getEmail(), "Profile update",
+                usersProfile.getFirstName(), message);
     }
 
     public void notifyOnChangePassword(String username) {
-
+        UsersProfile usersProfile = userProfileRepository.findByUsername(username);
+        String message = "Your password is updated.";
+        this.sendMail(usersProfile.getEmail(), "Password update",
+                usersProfile.getFirstName(), message);
     }
 
+    /**
+     * @param recipient
+     * @param subject
+     * @param recipientName
+     * @param message
+     */
     private void sendMail(String recipient, String subject, String recipientName, String message) {
         String htmlBody = htmlTemplate.toString().replace("${name}", recipientName);
         htmlBody = htmlBody.replace("${message}", message);
@@ -107,12 +129,23 @@ public class NotificationService {
         }
     }
 
+    /**
+     * To get notification policy for user
+     *
+     * @param username
+     * @return
+     */
     public NotificationPolicy getNotificationPolicy(String username) {
         NotificationPolicy notificationPolicy = notificationPolicyRepository.findByUsername(username);
         return notificationPolicy;
     }
 
-    public void updateNotificationPolicy(NotificationPolicy notificationPolicy){
+    /**
+     * To update notification policy by user
+     *
+     * @param notificationPolicy
+     */
+    public void updateNotificationPolicy(NotificationPolicy notificationPolicy) {
         NotificationPolicy dbNotificationPolicy = notificationPolicyRepository.findByUsername(notificationPolicy.getUsername());
         dbNotificationPolicy.setProfileUpdate(notificationPolicy.getProfileUpdate());
         dbNotificationPolicy.setPasswordUpdate(notificationPolicy.getPasswordUpdate());
