@@ -1,8 +1,6 @@
 package org.txstate.edu.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,10 +45,24 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
             // parse the token.
-            Claims jwtClaims = Jwts.parser()
-                    .setSigningKey(SECRET.getBytes())
-                    .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                    .getBody();
+            Claims jwtClaims = null;
+            try {
+                jwtClaims = Jwts.parser()
+                        .setSigningKey(SECRET.getBytes())
+                        .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                        .getBody();
+            } catch (ExpiredJwtException e) {
+                throw new RuntimeException("Token expired");
+            } catch (UnsupportedJwtException e) {
+                throw new RuntimeException("Invalid Token");
+            } catch (MalformedJwtException e) {
+                throw new RuntimeException("Invalid Token");
+            } catch (SignatureException e) {
+                throw new RuntimeException("Invalid Token");
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Invalid Token");
+            }
+
             String user = jwtClaims.getSubject();
             ArrayList authorities = (ArrayList) jwtClaims.get("role");
             List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();

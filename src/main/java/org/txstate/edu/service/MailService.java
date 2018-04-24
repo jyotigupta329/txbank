@@ -7,10 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
@@ -43,6 +40,44 @@ public class MailService {
 
     @Value("${bank.email.sender.name}")
     private String senderName;
+
+    public void sendMail(String recipient, String subject, String htmlBody, boolean aws) throws UnsupportedEncodingException, MessagingException {
+        if (aws) {
+            this.sendMail(recipient, subject, htmlBody);
+        } else {
+            final String username = System.getenv("TXBANK_EMAIL");
+            final String password = System.getenv("TXBANK_PASSWORD");
+
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+
+            Session session = Session.getInstance(props,
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password);
+                        }
+                    });
+
+            try {
+
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(username));
+                message.setRecipients(Message.RecipientType.TO,
+                        InternetAddress.parse(recipient));
+                message.setSubject(subject);
+                message.setContent(htmlBody, "text/html");
+                Transport.send(message);
+
+                System.out.println("Done");
+
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     public void sendMail(String recipient, String subject, String message) throws UnsupportedEncodingException, MessagingException {
         // Create a Properties object to contain connection configuration information.

@@ -123,7 +123,7 @@ public class NotificationService {
         String htmlBody = htmlTemplate.toString().replace("${name}", recipientName);
         htmlBody = htmlBody.replace("${message}", message);
         try {
-            mailService.sendMail(recipient, "Texas State Bank : " + subject, htmlBody);
+            mailService.sendMail(recipient, "Texas State Bank : " + subject, htmlBody, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
