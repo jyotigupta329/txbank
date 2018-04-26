@@ -14,6 +14,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.txstate.edu.config.TxbankApplication;
 import org.txstate.edu.model.UserForm;
+import org.txstate.edu.model.Users;
+import org.txstate.edu.model.UsersProfile;
 
 import java.util.List;
 
@@ -39,6 +41,11 @@ public class UserControllerTest {
 
     }
 
+    @After
+    public void tearDown() throws Exception {
+        this.activateAccount();
+    }
+
     private MultiValueMap<String, String> login(String username) {
         String requestBody = "{\n" +
                 "\t\"username\": \"" + username + "\",\n" +
@@ -48,14 +55,10 @@ public class UserControllerTest {
         HttpEntity<String> response = restTemplate.exchange("/login", HttpMethod.POST, entity, String.class);
 
         HttpHeaders headers = response.getHeaders();
-        MultiValueMap<String, String>  userRequestHeaders = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> userRequestHeaders = new LinkedMultiValueMap<>();
         userRequestHeaders.put("Authorization", headers.get("Authorization"));
         userRequestHeaders.add("content-type", "application/json");
         return userRequestHeaders;
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
     @Test
@@ -78,27 +81,64 @@ public class UserControllerTest {
     }
 
     @Test
-    public void addUser() throws Exception {
-    }
-
-    @Test
     public void updateUserProfile() throws Exception {
+        HttpEntity<String> entity = new HttpEntity<>(null, userRequestHeaders);
+
+        ResponseEntity<UsersProfile> responseEntity =
+                restTemplate.exchange("/users/profile/jyoti", HttpMethod.GET, entity, UsersProfile.class);
+        UsersProfile client = responseEntity.getBody();
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("Jyoti", client.getFirstName());
+
+        client.setAddress1("North Carolina");
+        HttpEntity<UsersProfile> updateEntity = new HttpEntity<>(client, userRequestHeaders);
+
+        ResponseEntity<Void> updateResponseEntity =
+                restTemplate.exchange("/users/profile/jyoti", HttpMethod.PUT, updateEntity, Void.class);
+        assertEquals(HttpStatus.OK, updateResponseEntity.getStatusCode());
     }
 
     @Test
     public void getUsersProfile() throws Exception {
+        HttpEntity<String> entity = new HttpEntity<>(null, userRequestHeaders);
+
+        ResponseEntity<UsersProfile> responseEntity =
+                restTemplate.exchange("/users/profile/jyoti", HttpMethod.GET, entity, UsersProfile.class);
+        UsersProfile client = responseEntity.getBody();
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("Jyoti", client.getFirstName());
     }
 
     @Test
     public void updateUserPassword() throws Exception {
+
+        Users client = new Users();
+        client.setPassword("password");
+        HttpEntity<Users> updateEntity = new HttpEntity<>(client, userRequestHeaders);
+
+        ResponseEntity<Void> updateResponseEntity =
+                restTemplate.exchange("/users/changePassword/jyoti", HttpMethod.PUT, updateEntity, Void.class);
+        assertEquals(HttpStatus.OK, updateResponseEntity.getStatusCode());
     }
 
     @Test
     public void activateAccount() throws Exception {
+        adminRequestHeaders = login("admin");
+        HttpEntity<Users> updateEntity = new HttpEntity<>(null, adminRequestHeaders);
+
+        ResponseEntity<Void> updateResponseEntity =
+                restTemplate.exchange("/users/activateAccount/jyoti", HttpMethod.POST, updateEntity, Void.class);
+        assertEquals(HttpStatus.OK, updateResponseEntity.getStatusCode());
     }
 
     @Test
     public void suspendAccount() throws Exception {
+        adminRequestHeaders = login("admin");
+        HttpEntity<Users> updateEntity = new HttpEntity<>(null, adminRequestHeaders);
+
+        ResponseEntity<Void> updateResponseEntity =
+                restTemplate.exchange("/users/suspendAccount/jyoti", HttpMethod.POST, updateEntity, Void.class);
+        assertEquals(HttpStatus.OK, updateResponseEntity.getStatusCode());
     }
 
 }

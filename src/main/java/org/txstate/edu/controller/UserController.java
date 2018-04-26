@@ -76,12 +76,6 @@ public class UserController {
         return userDetailsServiceImpl.getAllUsers();
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/users")
-    public void addUser(@RequestBody Users user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userDetailsServiceImpl.addUser(user);
-    }
-
 //    Update Profile
 
     @RequestMapping(method = RequestMethod.PUT, value = "/users/profile/{username}")
